@@ -1,15 +1,28 @@
 #define Routes for REST Endpoints
 
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, redirect, url_for
+from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS, cross_origin
+from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
+from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
+app.secret_key = 'secretkey'
 CORS(app)
+
+login_manager = LoginManager #handles login sessions for the user
+login_manager.init_app(app) #connects login manager to flask app
+login_manager.login_view = 'login' #tells the flask login where to redirect users who are not logged in
 
 messages = [
      {"message": "You are doing amazing! Keep going."},
     {"message": "Don't forget, you're loved and appreciated."}
 ]
+
+# User class for login
+class User(UserMixin):
+    def __init_(self, id):
+        self.id = id
 
 @app.route('/')
 def home():
